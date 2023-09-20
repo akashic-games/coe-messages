@@ -1,6 +1,6 @@
 {
   "name": "@akashic-extension/coe-messages",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "A core definitions for COE",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
