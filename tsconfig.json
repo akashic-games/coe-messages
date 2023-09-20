@@ -1,12 +1,12 @@
 {
-  "target": "ES5",
-  "lib": ["es5"],
-  "noImplicitAny": true,
-  "module": "commonjs",
-  "noUnusedLocals": true,
-  "declaration": true,
-  "strict": true,
   "compilerOptions": {
+    "target": "ES5",
+    "lib": ["es5"],
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "noUnusedLocals": true,
+    "declaration": true,
+    "strict": true,
     "outDir": "./lib"
   },
   "include": [
