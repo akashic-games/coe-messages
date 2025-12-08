@@ -4,7 +4,14 @@
 import * as messages from "..";
 
 describe("build test", () => {
-	it("SessionStartMessage", () => {
+	it("COEMessageTypeMap", () => {
+		expect(messages.COEMessageTypeMap.SessionStarted).toBe("start");
+		expect(messages.COEMessageTypeMap.SessionClosed).toBe("end");
+		expect(messages.COEMessageTypeMap.ChildSessionStart).toBe("child_start");
+		expect(messages.COEMessageTypeMap.ChildSessionEnd).toBe("child_end");
+	});
+
+	it("COESessionStartMessage", () => {
 		const sessionStartMessage: messages.COESessionStartMessage<any> = {
 			type: "start",
 			parameters: {
@@ -17,34 +24,38 @@ describe("build test", () => {
 		});
 	});
 
-	it("SessionCloseMessage", () => {
+	it("COESessionCloseMessage", () => {
 		const sessionCloseMessage: messages.COESessionCloseMessage = {
 			type: "end"
 		};
 		expect(sessionCloseMessage.type).toBe("end");
 	});
 
-	it("ChildSessionStartMessage", () => {
+	it("COEChildSessionStartMessage", () => {
 		const childSessionStartMessage: messages.COEChildSessionStartMessage = {
 			type: "child_start",
-			sessionId: "session-id"
+			parameters: {
+				sessionId: "session-id"
+			}
 		};
 		expect(childSessionStartMessage.type).toBe("child_start");
-		expect(childSessionStartMessage.sessionId).toBe("session-id");
+		expect(childSessionStartMessage.parameters.sessionId).toBe("session-id");
 	});
 
-	it("ChildSessionEndMessage", () => {
+	it("COEChildSessionEndMessage", () => {
 		const childSessionEndMessage: messages.COEChildSessionEndMessage = {
 			type: "child_end",
-			sessionId: "session-id",
-			result: {
-				data: "hoge"
-			},
-			error: null
+			parameters: {
+				sessionId: "session-id",
+				result: {
+					data: "hoge"
+				},
+				error: null
+			}
 		};
 		expect(childSessionEndMessage.type).toBe("child_end");
-		expect(childSessionEndMessage.sessionId).toBe("session-id");
-		expect(childSessionEndMessage.result).toEqual({
+		expect(childSessionEndMessage.parameters.sessionId).toBe("session-id");
+		expect(childSessionEndMessage.parameters.result).toEqual({
 			data: "hoge"
 		});
 	});

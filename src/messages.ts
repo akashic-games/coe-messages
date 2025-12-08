@@ -3,9 +3,9 @@ import { ApplicationIdentifier } from "./application";
 import { SessionId, SessionParameters } from "./session";
 
 /**
- * メッセージの種別
+ * メッセージの種別の値マップ
  */
-export const COEMessages = {
+export const COEMessageTypeMap = {
 	/**
 	 * セッションの開始
 	 */
@@ -25,22 +25,32 @@ export const COEMessages = {
 	 * 子セッションの終了
 	 */
 	ChildSessionEnd: "child_end"
-};
+} as const;
+
+/**
+ * メッセージの種別の型
+ */
+export type COEMessageType = (typeof COEMessageTypeMap)[keyof typeof COEMessageTypeMap];
 
 /**
  * 共体験アプリケーションフレームワークで用いられる共通メッセージインターフェース
  */
-export interface COEMessage {
+export interface COEMessageBase<T> {
 	/**
 	 * メッセージの種別
 	 */
-	type: "start" | "end" | "child_start" | "child_end";
+	type: COEMessageType;
+
+	/**
+	 * パラメータ
+	 */
+	parameters?: T;
 }
 
 /**
  * セッションの開始を要求するメッセージ
  */
-export interface COESessionStartMessage<T extends SessionParameters> extends COEMessage {
+export interface COESessionStartMessage<T extends SessionParameters> extends COEMessageBase<T> {
 	/**
 	 * メッセージの種別。
 	 * COESessionStartMessageにおいては"start"固定。
@@ -56,7 +66,7 @@ export interface COESessionStartMessage<T extends SessionParameters> extends COE
 /**
  * 現在のセッションに対して終了を要求するメッセージ
  */
-export interface COESessionCloseMessage extends COEMessage {
+export interface COESessionCloseMessage extends COEMessageBase<void> {
 	/**
 	 * メッセージの種別。
 	 * COESessionCloseMessageにおいては"end"固定。
@@ -64,16 +74,7 @@ export interface COESessionCloseMessage extends COEMessage {
 	type: "end";
 }
 
-/**
- * 子セッションの開始を要求するメッセージ
- */
-export interface COEChildSessionStartMessage extends COEMessage {
-	/**
-	 * メッセージの種別。
-	 * COEChildSessionStartMessageにおいては"child_start"固定。
-	 */
-	type: "child_start";
-
+export interface COEChildSessionStartMessageParameters {
 	/**
 	 * このメッセージを送信したセッションID
 	 */
@@ -139,15 +140,22 @@ export interface COEChildSessionStartMessage extends COEMessage {
 }
 
 /**
- * 子セッションの終了を要求するメッセージ
+ * 子セッションの開始を要求するメッセージ
  */
-export interface COEChildSessionEndMessage extends COEMessage {
+export interface COEChildSessionStartMessage extends COEMessageBase<COEChildSessionStartMessageParameters> {
 	/**
 	 * メッセージの種別。
-	 * COEChildSessionEndMessageにおいては"child_end"固定。
+	 * COEChildSessionStartMessageにおいては"child_start"固定。
 	 */
-	type: "child_end";
+	type: "child_start";
 
+	/**
+	 * 子セッション開始時に渡すパラメータ
+	 */
+	parameters: COEChildSessionStartMessageParameters;
+}
+
+export interface COEChildSessionEndMessageParameters {
 	/**
 	 * このメッセージを送信したセッションID
 	 */
@@ -163,6 +171,22 @@ export interface COEChildSessionEndMessage extends COEMessage {
 	 * この値は if (error) として判定することで、エラーで終わったかどうかを検査することが期待されるので、エラーの場合にfalsy値を入れない事が保証される
 	 */
 	error?: any;
+}
+
+/**
+ * 子セッションの終了を要求するメッセージ
+ */
+export interface COEChildSessionEndMessage extends COEMessageBase<COEChildSessionEndMessageParameters> {
+	/**
+	 * メッセージの種別。
+	 * COEChildSessionEndMessageにおいては"child_end"固定。
+	 */
+	type: "child_end";
+
+	/**
+	 * 子セッションの終了要求時に渡すパラメータ
+	 */
+	parameters: COEChildSessionEndMessageParameters;
 }
 
 /**
