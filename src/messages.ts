@@ -35,22 +35,17 @@ export type COEMessageType = (typeof COEMessageTypeMap)[keyof typeof COEMessageT
 /**
  * 共体験アプリケーションフレームワークで用いられる共通メッセージインターフェース
  */
-export interface COEMessageBase<T> {
+export interface COEMessageBase {
 	/**
 	 * メッセージの種別
 	 */
 	type: COEMessageType;
-
-	/**
-	 * パラメータ
-	 */
-	parameters?: T;
 }
 
 /**
  * セッションの開始を要求するメッセージ
  */
-export interface COESessionStartMessage<T extends SessionParameters> extends COEMessageBase<T> {
+export interface COESessionStartMessage<T extends SessionParameters> extends COEMessageBase {
 	/**
 	 * メッセージの種別。
 	 * COESessionStartMessageにおいては"start"固定。
@@ -66,7 +61,7 @@ export interface COESessionStartMessage<T extends SessionParameters> extends COE
 /**
  * 現在のセッションに対して終了を要求するメッセージ
  */
-export interface COESessionCloseMessage extends COEMessageBase<void> {
+export interface COESessionCloseMessage extends COEMessageBase {
 	/**
 	 * メッセージの種別。
 	 * COESessionCloseMessageにおいては"end"固定。
@@ -142,7 +137,7 @@ export interface COEChildSessionStartMessageParameters {
 /**
  * 子セッションの開始を要求するメッセージ
  */
-export interface COEChildSessionStartMessage extends COEMessageBase<COEChildSessionStartMessageParameters> {
+export interface COEChildSessionStartMessage extends COEMessageBase {
 	/**
 	 * メッセージの種別。
 	 * COEChildSessionStartMessageにおいては"child_start"固定。
@@ -176,7 +171,7 @@ export interface COEChildSessionEndMessageParameters {
 /**
  * 子セッションの終了を要求するメッセージ
  */
-export interface COEChildSessionEndMessage extends COEMessageBase<COEChildSessionEndMessageParameters> {
+export interface COEChildSessionEndMessage extends COEMessageBase {
 	/**
 	 * メッセージの種別。
 	 * COEChildSessionEndMessageにおいては"child_end"固定。
